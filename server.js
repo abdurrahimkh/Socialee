@@ -5,6 +5,7 @@ const express = require("express");
 const database = require("./config/database");
 const viewsRouter = require("./routes/Views");
 const postsRouter = require("./routes/Post");
+const usersRouter = require("./routes/User");
 
 // Database connection
 database.connect();
@@ -16,6 +17,7 @@ app.use(express.json());
 // Routes
 app.use("/", viewsRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/users", usersRouter);
 
 // Listen to Server
 app.listen(5000, () => {
