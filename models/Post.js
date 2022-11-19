@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const slugify = require("slugify");
 
 const postSchema = new Schema(
   {
-    title: String,
-    slug: String,
+    title: { type: String, unique: true },
+    slug: { type: String, unique: true },
     body: String,
     coverImage: String,
     images: [String],
@@ -15,6 +16,11 @@ const postSchema = new Schema(
     timestamps: true,
   }
 );
+
+postSchema.pre("save", function (next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
+});
 
 const Post = mongoose.model("Post", postSchema);
 

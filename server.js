@@ -11,6 +11,7 @@ database.connect();
 
 // Fire up server
 const app = express();
+app.use(express.json());
 
 // Routes
 app.use("/", viewsRouter);
