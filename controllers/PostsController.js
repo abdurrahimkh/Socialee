@@ -1,3 +1,4 @@
+const validator = require("express-validator");
 const Post = require("./../models/Post");
 
 exports.getAll = async (req, res) => {
@@ -57,6 +58,17 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
+    const errors = validator.validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        data: {
+          message: "Post creation failed !",
+          errors: errors.array(),
+        },
+      });
+    }
+
     const { title, body } = req.body;
 
     const post = await Post.create({ title, body });
