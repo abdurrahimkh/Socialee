@@ -1,11 +1,58 @@
-const Post = require("../models/Post");
+const Post = require("./../models/Post");
 
-exports.getAll = (req, res) => {
-  res.send("ALL POSTS");
+exports.getAll = async (req, res) => {
+  try {
+    const posts = await Post.find({ isPublished: true }).sort("-createdAt");
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        posts,
+      },
+    });
+  } catch (error) {
+    console.warn("Error: ", error);
+
+    res.status(201).json({
+      status: "fail",
+      data: {
+        message: "Error getting posts !",
+      },
+    });
+  }
 };
 
-exports.getOne = (req, res) => {
-  res.send("ONE POST");
+exports.getOne = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug });
+
+    if (!post) {
+      res.status(400).json({
+        status: "fail",
+        data: {
+          message: "Post not found !",
+        },
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post,
+      },
+    });
+  } catch (error) {
+    console.warn("Error: ", error);
+
+    res.status(201).json({
+      status: "fail",
+      data: {
+        message: "Error getting post !",
+      },
+    });
+  }
 };
 
 exports.create = async (req, res) => {
@@ -24,7 +71,7 @@ exports.create = async (req, res) => {
     console.warn("Error: ", error);
 
     res.status(201).json({
-      status: "success",
+      status: "fail",
       data: {
         message: "Error creating post !",
       },
@@ -32,10 +79,72 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.updateOne = (req, res) => {
-  res.send("Update One POST");
+exports.updateOne = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug });
+    console.log("POST: ", post);
+
+    if (!post) {
+      res.status(400).json({
+        status: "fail",
+        data: {
+          message: "Post not found !",
+        },
+      });
+    }
+
+    post.title = req.body.title;
+    post.body = req.body.body;
+    await post.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        post,
+      },
+    });
+  } catch (error) {
+    console.warn("Error: ", error);
+
+    res.status(201).json({
+      status: "fail",
+      data: {
+        message: "Error updating post !",
+      },
+    });
+  }
 };
 
-exports.delete = (req, res) => {
-  res.send("Delete One POST");
+exports.delete = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug });
+
+    if (!post) {
+      res.status(400).json({
+        status: "fail",
+        data: {
+          message: "Post not found !",
+        },
+      });
+    }
+
+    await post.remove();
+
+    res.status(204).json({
+      status: "success",
+    });
+  } catch (error) {
+    console.warn("Error: ", error);
+
+    res.status(201).json({
+      status: "fail",
+      data: {
+        message: "Error deleting post !",
+      },
+    });
+  }
 };
