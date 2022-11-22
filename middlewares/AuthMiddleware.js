@@ -29,7 +29,7 @@ exports.requireLogin = async (req, res, next) => {
   );
 
   // Check User Exists
-  const user = User.findById(decode.id);
+  const user = await User.findById(decode.id);
   if (!user) {
     return res.status(401).json({
       status: "fail",
@@ -38,5 +38,7 @@ exports.requireLogin = async (req, res, next) => {
       },
     });
   }
+
+  req.user = user;
   next();
 };

@@ -2,6 +2,27 @@ const validator = require("express-validator");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
+exports.profile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate("posts");
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    console.warn("Error: ", error);
+
+    res.status(201).json({
+      status: "fail",
+      data: {
+        message: "Error during login user !",
+      },
+    });
+  }
+};
+
 exports.login = async (req, res) => {
   try {
     // Validation

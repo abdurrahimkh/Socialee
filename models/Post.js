@@ -11,6 +11,7 @@ const postSchema = new Schema(
     images: [String],
     isDraft: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: true },
+    postedBy: { type: Schema.ObjectId, ref: "User", required: true },
   },
   {
     timestamps: true,
