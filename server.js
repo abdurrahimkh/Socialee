@@ -1,5 +1,6 @@
 // Global Imports
 const express = require("express");
+const dotenv = require("dotenv").config();
 
 // Project Import
 const database = require("./config/database");

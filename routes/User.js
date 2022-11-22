@@ -8,7 +8,7 @@ const AuthValidatons = require("../validators/AuthValidations");
 
 const router = express.Router();
 
-router.post("/login", UserController.login);
+router.post("/login", AuthValidatons.login, UserController.login);
 router.post("/register", AuthValidatons.register, UserController.register);
 router.post("/logout", UserController.logout);
 
