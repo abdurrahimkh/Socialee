@@ -21,6 +21,7 @@ app.use("/api/posts", postsRouter);
 app.use("/api/users", usersRouter);
 
 // Listen to Server
-app.listen(5000, () => {
-  console.log(`Server running at PORT: 5000`);
+const PORT = process.env.APP_PORT;
+app.listen(PORT, () => {
+  console.log(`Server running at PORT: PORT`);
 });

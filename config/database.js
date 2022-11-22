@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 exports.connect = () => {
   mongoose
-    .connect("mongodb://localhost:27017/socialize", {
+    .connect(process.env.DB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
