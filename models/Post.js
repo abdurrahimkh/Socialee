@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const slugify = require("slugify");
+const slugify = require('slugify');
 
 const postSchema = new Schema(
   {
@@ -11,18 +11,28 @@ const postSchema = new Schema(
     images: [String],
     isDraft: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: true },
-    postedBy: { type: Schema.ObjectId, ref: "User", required: true },
+    postedBy: { type: Schema.ObjectId, ref: 'User', required: true },
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   },
   {
     timestamps: true,
   }
 );
 
-postSchema.pre("save", function (next) {
+postSchema.pre('save', function (next) {
   this.slug = slugify(this.title, { lower: true });
   next();
 });
 
-const Post = mongoose.model("Post", postSchema);
+postSchema.pre('remove', function (next) {
+  this.model('Tag').updateMany(
+    { posts: this._id },
+    { $pull: { posts: this._id } },
+    { multi: true },
+    next
+  );
+});
+
+const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
